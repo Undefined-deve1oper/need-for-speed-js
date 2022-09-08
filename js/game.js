@@ -1,6 +1,66 @@
 import { CarsList } from "./catalog/carsList.js";
 import { createSlider, swiper } from "./slider.js";
 
+// Создаем функцию preloader
+function preloader() {
+    // Так как это прелоадер мы не должны позволять пользователю скролить сайт
+    document.body.style.overflow = "hidden";
+    // Доставем нужные дивы
+    const overlay = document.getElementById( "overlay" );
+    const progstat = document.getElementById( "progstat" );
+    const progress = document.getElementById( "progress" );
+    // Получаем все картинки из HTML
+    const images = document.images;
+
+    // Создаем переменную count при помощи которой высчитываем процент загрузки
+    let count = 0;
+    // В переменную помещаем количество всех кортинок на сайте
+    let total = images.length;
+    // Говорим если картинок нет то убирай прелоадер, так как сайт уже весь загрузился
+    if ( total == 0 ) return doneLoading();
+
+    // Создаем функцию itemLoaded в которой происходят следующие действия
+    function itemLoaded() {
+        // Увеличиваем текущее число на один
+        count++;
+        // Высчитываем проценты
+        let percent = (100 / total * count).toFixed( 1 ) + "%";
+        // Задаем ширину полоски в процентах которые только, что высчитали
+        progress.style.width = percent;
+        // Указываем текущий процент на экран
+        progstat.innerHTML = "Loading " + percent;
+        // Если текущее число равно общему количеству то убираем прелоадер вызвав функцию doneLoading
+        if ( count === total ) return doneLoading();
+    }
+
+    // Создаем функцию doneLoading
+    function doneLoading() {
+        // Делаем прелоадер невидимым и разрешаем скролить
+        overlay.style.transform = `scale(0)`;
+        document.body.style.overflow = "visible";
+        setTimeout( function () {
+            // Через 1.2 секнды убираем его вовсе сделали мы это для плавной анимации
+            overlay.style.display = "none";
+        }, 1200 );
+    }
+
+    // Преобразовываем картинки в массив
+    Array.from( images ).forEach( ( image ) => {
+        // Создаем новую картинку через new Image
+        let tImg = new Image();
+        // При успешной загрузке или ошибке вызываем itemLoaded
+        tImg.addEventListener( "load", itemLoaded );
+        tImg.addEventListener( "error", itemLoaded );
+        // И указываем путь для текущей картинки
+        tImg.src = image.src;
+    } );
+}
+
+// Используем событие DOMContentLoaded
+// DomContentLoaded это когда - браузер полностью загрузил HTML, было построено DOM-дерево, но внешние ресурсы, могут
+// быть ещё не загружены.
+document.addEventListener( 'DOMContentLoaded', preloader );
+
 // Создаем массив ASSETS в который помещаем картинки и основные цвета игры
 const ASSETS = {
     COLOR: {
