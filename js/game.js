@@ -64,7 +64,7 @@ document.addEventListener( 'DOMContentLoaded', preloader );
 // Создаем массив ASSETS в который помещаем картинки и основные цвета игры
 const ASSETS = {
     COLOR: {
-        TAR: ["#959298", "#9c9a9d"],
+        TAR: ["#9c9a9d", "#9c9a9d"],
         RUMBLE: ["red", "#f5f2f6"],
         GRASS: ["#eedccd", "#e6d4c5"],
     },
